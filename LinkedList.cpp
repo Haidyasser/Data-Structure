@@ -5,25 +5,29 @@ class Node{
     public:
     int data;
     Node* next;
+    
     Node(int _data = 0, Node* _next = NULL){
         data = _data;
         next = _next;
     }
+    
 };
 class LinkedList{
-    private:
+private:
     Node* head;
-    public:
+public:
+    
     LinkedList(){
         head = NULL;
     }
     ~LinkedList(){
         Node* p = head;
         while(p){
-            p = p->next;
-            delete head;
-            head = p;
+            Node* temp = p -> next;
+            delete p;
+            p = temp;
         }
+        head = NULL;
         cout << "List Deleted" << endl;
     }
     bool isEmpty(){
@@ -35,13 +39,12 @@ class LinkedList{
         head = newNode;
     }
     void AddToTail(int data){
-        Node* NewNode = new Node(data);
         Node* p = head;
         if(!p) return;
         while(p -> next){  
             p = p ->next;
         }
-        p -> next = NewNode;
+        p -> next = new Node(data);
     }
     void findNode(int value){
         Node* p = head;
@@ -109,14 +112,18 @@ class LinkedList{
         }
         return sum;
     }
-    LinkedList copyList(){
-        Node* p = head;
-        LinkedList* NewList = new LinkedList();
+    void copyList(LinkedList& NewList){
+        Node *p = head, *q = NewList.head;
         while(p){
-            NewList -> AddToTail(p -> data);
+            if(q == NULL){
+                NewList.head = new Node(p -> data);
+                q = NewList.head;
+            }else {
+                q -> next = new Node(p -> data);
+                q = q -> next;
+            }
             p = p -> next;
         }
-        return *NewList;
     }
 
 };
@@ -136,6 +143,8 @@ int main()
     cout << l1.countList() << endl;
     cout << l1.getMinimum() << endl;
     cout << l1.sumOdd() << endl;
-    l1.copyList();
+    LinkedList l2;
+    l1.copyList(l2);
+    l2.print();
     return 0;           
 }
