@@ -72,11 +72,9 @@ BST* BST::Insert(BST* root, int value) {
 }
 
 BST* BST::getMin(BST* root) {
-    if(!root)
-        return root;
-    if(!root -> left)
-        return root;
-    return getMin(root -> left);
+    BST* current = root;
+    while (current && current -> left != nullptr) current = current -> left;
+    return current;
 }
 BST* BST::getMax(BST* root) {
     if(!root)
@@ -86,33 +84,26 @@ BST* BST::getMax(BST* root) {
     return getMax(root -> right);
 }
 
-BST* BST::Delete(BST *root, int value) {
-    if(!root)
-        return root;
-    else if(root -> data > value)
-        root -> left = Delete(root -> left, value);
-    else if(root -> data < value)
-        root -> right = Delete(root -> right, value);
-    else{
-        if(root -> left == NULL && root -> right == NULL){
-            delete root;
-            root = NULL;
+BST* BST:: Delete(BST* root, int key){
+    if(!root) return root;
+    if(key < root -> data)
+        root -> left = Delete(root -> left, key);
+    else if(key > root -> data)
+        root -> right = Delete(root -> right, key);
+    else {
+        if(!root -> left && !root -> right) return NULL;
+        else if(!root -> left){
+            BST* temp = root -> right;
+            free(root);
+            return temp;
+        }else if(!root -> right){
+            BST* temp = root -> left;
+            free(root);
+            return temp;
         }
-        else if(root -> left == NULL){
-            BST* temp = root;
-            root = root -> right;
-            delete temp;
-        }
-        else if(root -> right == NULL){
-            BST* temp = root;
-            root = root -> left;
-            delete temp;
-        }
-        else{
-            BST* temp = getMin(root -> right);
-            root -> data = temp -> data;
-            Delete(root->right, temp->data);
-        }
+        BST* temp = getMin(root -> right);
+        root -> data = temp -> data;
+        root -> right = Delete(root -> right, temp -> data);
     }
     return root;
 }
