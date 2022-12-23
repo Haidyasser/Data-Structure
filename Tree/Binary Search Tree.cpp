@@ -3,7 +3,7 @@ using namespace std;
 #define endl "\n"
 
 class BST{
-private:
+public:
     int data;
     BST* left, *right;
 public:
@@ -25,15 +25,19 @@ public:
     int getData(BST* root);
 };
 
+// check if binary tree is empty
 bool BST::isEmpty(){
     return this == NULL;
 }
-// count size of binary tree
+
+// get length of binary tree
 int BST::Length(BST *root) {
     if(!root)
         return 0;
     return 1 + Length(root -> left) + Length(root -> right);
 }
+
+// print binary tree in inorder
 void BST::printInorder(BST *root) {
     if(!root)
         return;
@@ -41,6 +45,8 @@ void BST::printInorder(BST *root) {
     cout << root ->data << " ";
     printInorder(root ->right);
 }
+
+// print binary tree in preorder
 void BST::printPreorder(BST *root) {
     if(!root)
         return;
@@ -48,18 +54,24 @@ void BST::printPreorder(BST *root) {
     printPreorder(root -> left);
     printPreorder(root -> right);
 }
+
+// print binary tree in postorder
 void BST::printPostorder(BST *root) {
     if(!root)
         return;
-    printPostorder(root -> right);
     printPostorder(root -> left);
-    cout << root ->data << " ";
+    printPostorder(root -> right);
+	cout << root ->data << " ";
 }
+
+// get depth of binary tree
 int BST::getDepth(BST *root) {
     if(!root)
         return 0;
     return 1 + max(getDepth(root -> right), getDepth(root -> left));
 }
+
+// insert node to binary tree
 BST* BST::Insert(BST* root, int value) {
     if(!root) {
         return new BST(value);
@@ -71,11 +83,16 @@ BST* BST::Insert(BST* root, int value) {
     return root;
 }
 
+// get minimun value of binary tree
 BST* BST::getMin(BST* root) {
-    BST* current = root;
-    while (current && current -> left != nullptr) current = current -> left;
-    return current;
+    if(!root)
+		return root;
+	if(!root -> left)
+		return root;
+	return getMin(root -> left);
 }
+
+// get maximum value of binary tree
 BST* BST::getMax(BST* root) {
     if(!root)
         return root;
@@ -84,14 +101,18 @@ BST* BST::getMax(BST* root) {
     return getMax(root -> right);
 }
 
-BST* BST:: Delete(BST* root, int key){
-    if(!root) return root;
-    if(key < root -> data)
-        root -> left = Delete(root -> left, key);
-    else if(key > root -> data)
-        root -> right = Delete(root -> right, key);
+// delete node in binary tree
+BST* BST:: Delete(BST* root, int value){
+    if(!root) 
+        return root;
+    if(value < root -> data)
+        root -> left = Delete(root -> left, value);
+    else if(value > root -> data)
+        root -> right = Delete(root -> right, value);
     else {
-        if(!root -> left && !root -> right) return NULL;
+        if(!root -> left && !root -> right) {
+            return NULL;
+        }
         else if(!root -> left){
             BST* temp = root -> right;
             free(root);
@@ -107,6 +128,8 @@ BST* BST:: Delete(BST* root, int key){
     }
     return root;
 }
+
+// find node in binary tree
 bool BST::findNode(BST* root, int value) {
     if(!root)
         return 0;
@@ -117,30 +140,32 @@ bool BST::findNode(BST* root, int value) {
     else
         return findNode(root -> right, value);
 }
-int BST::getData(BST *root) {
-    return root -> data;
-}
+
 int main()
 {
     freopen("input.txt","r",stdin),freopen("output.txt","w",stdout);
-    BST *tree = NULL, obj;
-    tree = obj.Insert(tree, 10);
-    obj.Insert(tree, 8);
-    obj.Insert(tree, 7);
-    obj.Insert(tree, 9);
-    obj.printPostorder(tree);
-    cout << '\n';
-    obj.printPreorder(tree);
-    cout << '\n';
-    obj.printInorder(tree);
-    cout << '\n';
-    cout << obj.getDepth(tree) << endl;
-    cout << obj.Length(tree) << endl;
-    cout << obj.findNode(tree, 7) << endl;
-    cout << obj.findNode(tree, 11) << endl;
-    cout << obj.getData(obj.getMin(tree)) << endl;
-    cout << obj.getData(obj.getMax(tree)) << endl;
-    obj.Delete(tree, 10);
-    obj.printInorder(tree);
+    BST *tree = NULL;
+	tree = tree -> Insert(tree, 50);
+	tree = tree -> Insert(tree, 30);
+	tree = tree -> Insert(tree, 20);
+	tree = tree -> Insert(tree, 40);
+	tree = tree -> Insert(tree, 70);
+	tree = tree -> Insert(tree, 60);
+	tree = tree -> Insert(tree, 80);
+	cout << "Inorder: ";
+	tree -> printInorder(tree);
+	cout << endl;
+	cout << "Preorder: ";
+	tree -> printPreorder(tree);
+	cout << endl;
+	cout << "Postorder: ";
+	tree -> printPostorder(tree);
+	cout << endl;
+	cout << "Length: " << tree -> Length(tree) << endl;
+	cout << "Depth: " << tree -> getDepth(tree) << endl;
+	cout << "Min: " << tree ->getMin(tree) -> data << endl;
+	cout << "Max: " << tree ->getMax(tree) -> data << endl;
+	tree -> Delete(tree, 20);
+	tree -> printInorder(tree);
     return 0;
 }
