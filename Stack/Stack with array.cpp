@@ -61,7 +61,6 @@ bool Stack::isPalindrome() {
 }
 int main()
 {
-    Haidy();
     Stack s;
     for(int i = 0; i < 5; i++)
         s.push(i + 1);
